@@ -1,20 +1,18 @@
 # Задание 1
-
-
 class BigBell:
     def __init__(self):
-        self.next_sound = "ding"
+        self.sounds = ["ding", "dong"]
+        self.index = 0
 
     def sound(self):
-        print(self.next_sound)
-        self.next_sound = "dong" if self.next_sound == "ding" else "ding"
+        print(self.sounds[self.index % 2])
+        self.index += 1
 
 
 # Задание 2
 class Balance:
     def __init__(self):
-        self.left = 0
-        self.right = 0
+        self.left = self.right = 0
 
     def add_right(self, weight):
         self.right += weight
@@ -25,10 +23,7 @@ class Balance:
     def result(self):
         if self.left == self.right:
             return "="
-        elif self.left > self.right:
-            return "L"
-        else:
-            return "R"
+        return "L" if self.left > self.right else "R"
 
 
 # Задание 3
@@ -37,128 +32,68 @@ class Selector:
         self.numbers = numbers
 
     def get_odds(self):
-        return [x for x in self.numbers if x % 2 != 0]
+        return [x for x in self.numbers if x % 2]
 
     def get_evens(self):
-        return [x for x in self.numbers if x % 2 == 0]
+        return [x for x in self.numbers if not x % 2]
 
 
 # Задание 4
 class Point:
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x, self.y = x, y
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        return not (self == other)
 
 
 # Задание 5
-
-
-class Fraction:
-    def __init__(self, numerator, denominator=1):
-        if denominator == 0:
-            raise ValueError("Знаменатель не может быть равен нулю.")
-        common_divisor = math.gcd(numerator, denominator)
-        self.numerator = numerator // common_divisor
-        self.denominator = denominator // common_divisor
-        if self.denominator < 0:
-            self.numerator *= -1
-            self.denominator *= -1
-
-    def __add__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        new_numerator = self.numerator * other.denominator + other.numerator * self.denominator
-        new_denominator = self.denominator * other.denominator
-        return Fraction(new_numerator, new_denominator)
-
-    def __sub__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        new_numerator = self.numerator * other.denominator - other.numerator * self.denominator
-        new_denominator = self.denominator * other.denominator
-        return Fraction(new_numerator, new_denominator)
-
-    def __mul__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        new_numerator = self.numerator * other.numerator
-        new_denominator = self.denominator * other.denominator
-        return Fraction(new_numerator, new_denominator)
-
-    def __truediv__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        if other.numerator == 0:
-            raise ValueError("Деление на ноль невозможно.")
-        new_numerator = self.numerator * other.denominator
-        new_denominator = self.denominator * other.numerator
-        return Fraction(new_numerator, new_denominator)
-
-    def __eq__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        return (self.numerator == other.numerator) and (self.denominator == other.denominator)
-
-    def __lt__(self, other):
-        if isinstance(other, int):
-            other = Fraction(other)
-        return (self.numerator * other.denominator) < (other.numerator * self.denominator)
-
-    def __le__(self, other):
-        return self.__lt__(other) or self.__eq__(other)
-
-    def __gt__(self, other):
-        return not self.__le__(other)
-
-    def __ge__(self, other):
-        return not self.__lt__(other)
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __str__(self):
-        return f"{self.numerator}/{self.denominator}"
-
-    def __repr__(self):
-        return f"Fraction({self.numerator}, {self.denominator})"
-
+class ReversedList:
+    def init(self, original_list):
+        self.original_list = original_list
+    def len(self):
+        return len(self.original_list)
+    def getitem(self, index):
+        if index < 0 or index >= len(self.original_list):
+            raise IndexError("Index Error")
+        return self.original_list[len(self.original_list) - 1 - index]
+r1 = ReversedList([10, 20, 30])
+print(len(r1))
+for i in range(len(r1)):
+    print(r1[i])
+r2 = ReversedList([])
+print(len(r2))
 
 # Задание 6
 class SparseArray:
     def __init__(self):
         self.data = {}
 
-    def __setitem__(self, index, value):
-        self.data[index] = value
+    def __setitem__(self, key, value):
+        self.data[key] = value
 
-    def __getitem__(self, index):
-        return self.data.get(index, 0)
+    def __getitem__(self, key):
+        return self.data.get(key, 0)
 
 
 # Задание 7
 class Polynomial:
     def __init__(self, coefficients):
-        self.coefficients = coefficients
+        self.coeffs = coefficients
 
     def __call__(self, x):
-        result = 0
-        for power, coeff in enumerate(self.coefficients):
-            result += coeff * (x ** power)
-        return result
+        return sum(coeff * (x ** i) for i, coeff in enumerate(self.coeffs))
 
     def __add__(self, other):
-        max_len = max(len(self.coefficients), len(other.coefficients))
-        new_coeffs = []
-        for i in range(max_len):
-            coeff1 = self.coefficients[i] if i < len(self.coefficients) else 0
-            coeff2 = other.coefficients[i] if i < len(other.coefficients) else 0
-            new_coeffs.append(coeff1 + coeff2)
+        max_len = max(len(self.coeffs), len(other.coeffs))
+        new_coeffs = [
+            (self.coeffs[i] if i < len(self.coeffs) else 0) +
+            (other.coeffs[i] if i < len(other.coeffs) else 0)
+            for i in range(max_len)
+        ]
         return Polynomial(new_coeffs)
 
 
@@ -176,8 +111,8 @@ class Queue:
     def pop(self):
         return self.items.pop(0) if self.items else None
 
-    def extend(self, queue):
-        self.items.extend(queue.items)
+    def extend(self, other):
+        self.items.extend(other.items)
 
     def next(self):
         return Queue(*self.items[1:]) if len(self.items) > 1 else Queue()
@@ -196,21 +131,18 @@ class Queue:
         return Queue(*self.items[n:]) if n < len(self.items) else Queue()
 
     def __str__(self):
-        return "[" + " -> ".join(map(str, self.items)) + "]" if self.items else "[]"
+        return f"[{' -> '.join(map(str, self.items))}]" if self.items else "[]"
 
-    def __next__(self):
-        return self.next()
+    __next__ = next
 
 
 # Задание 9
 class Triangle:
     def __init__(self, a, b, c):
-        self.a = a
-        self.b = b
-        self.c = c
+        self.sides = (a, b, c)
 
     def perimeter(self):
-        return self.a + self.b + self.c
+        return sum(self.sides)
 
 
 class EquilateralTriangle(Triangle):
@@ -271,22 +203,21 @@ class D(B, A):
 
 
 # Задание 13
+import math
 
 
 class Weapon:
     def __init__(self, name, damage, range_):
-        self.name = name
-        self.damage = damage
-        self.range = range_
+        self.name, self.damage, self.range = name, damage, range_
 
     def hit(self, actor, target):
         if not target.is_alive():
             print("Враг уже повержен")
             return
 
-        actor_x, actor_y = actor.get_coords()
-        target_x, target_y = target.get_coords()
-        distance = math.sqrt((actor_x - target_x) ** 2 + (actor_y - target_y) ** 2)
+        ax, ay = actor.get_coords()
+        tx, ty = target.get_coords()
+        distance = math.hypot(ax - tx, ay - ty)
 
         if distance > self.range:
             print(f"Враг слишком далеко для оружия {self.name}")
@@ -301,21 +232,17 @@ class Weapon:
 
 class BaseCharacter:
     def __init__(self, pos_x, pos_y, hp):
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.hp = hp
+        self.pos_x, self.pos_y, self.hp = pos_x, pos_y, hp
 
-    def move(self, delta_x, delta_y):
-        self.pos_x += delta_x
-        self.pos_y += delta_y
+    def move(self, dx, dy):
+        self.pos_x += dx
+        self.pos_y += dy
 
     def is_alive(self):
         return self.hp > 0
 
     def get_damage(self, amount):
-        self.hp -= amount
-        if self.hp < 0:
-            self.hp = 0
+        self.hp = max(0, self.hp - amount)
 
     def get_coords(self):
         return (self.pos_x, self.pos_y)
@@ -341,18 +268,16 @@ class MainHero(BaseCharacter):
         super().__init__(pos_x, pos_y, hp)
         self.name = name
         self.weapons = []
-        self.current_weapon_index = -1
+        self.current_weapon = -1
 
     def hit(self, target):
         if not self.weapons:
             print("Я безоружен")
             return
-
         if not isinstance(target, BaseEnemy):
             print("Могу ударить только Врага")
             return
-
-        self.weapons[self.current_weapon_index].hit(self, target)
+        self.weapons[self.current_weapon].hit(self, target)
 
     def add_weapon(self, weapon):
         if not isinstance(weapon, Weapon):
@@ -361,372 +286,137 @@ class MainHero(BaseCharacter):
 
         self.weapons.append(weapon)
         print(f"Подобрал {weapon}")
-
         if len(self.weapons) == 1:
-            self.current_weapon_index = 0
+            self.current_weapon = 0
 
     def next_weapon(self):
         if not self.weapons:
             print("Я безоружен")
-            return
-
-        if len(self.weapons) == 1:
+        elif len(self.weapons) == 1:
             print("У меня только одно оружие")
-            return
-
-        self.current_weapon_index = (self.current_weapon_index + 1) % len(self.weapons)
-        print(f"Сменил оружие на {self.weapons[self.current_weapon_index]}")
+        else:
+            self.current_weapon = (self.current_weapon + 1) % len(self.weapons)
+            print(f"Сменил оружие на {self.weapons[self.current_weapon]}")
 
     def heal(self, amount):
-        self.hp += amount
-        if self.hp > 200:
-            self.hp = 200
+        self.hp = min(200, self.hp + amount)
         print(f"Полечился, теперь здоровья {self.hp}")
 
 
-# Задание 14
-class MailServer:
-    _servers = {}
-
-    def __init__(self, name):
-        self.name = name
-        self.mailboxes = {}
-        self._servers[name] = self
-
-    @classmethod
-    def get_server(cls, name):
-        return cls._servers.get(name)
-
-    @classmethod
-    def list_servers(cls):
-        return list(cls._servers.keys())
-
-    def add_user(self, user):
-        if user not in self.mailboxes:
-            self.mailboxes[user] = []
-
-    def receive_mail(self, user, message):
-        if user in self.mailboxes:
-            self.mailboxes[user].append(message)
-        else:
-            raise ValueError(f"User {user} not found")
-
-    def get_mail(self, user):
-        if user in self.mailboxes:
-            messages = self.mailboxes[user].copy()
-            self.mailboxes[user].clear()
-            return messages
-        raise ValueError(f"User {user} not found")
-
-
-class MailClient:
-    def __init__(self, server, user):
-        self.server = server
-        self.user = user
-        self.server.add_user(user)
-
-    def receive_mail(self):
-        messages = self.server.get_mail(self.user)
-        return messages if messages else "No new messages"
-
-    def send_mail(self, target_server_name, target_user, message):
-        target_server = MailServer.get_server(target_server_name)
-        if not target_server:
-            raise ValueError(f"Server {target_server_name} doesn't exist")
-        target_server.receive_mail(target_user, message)
-        return f"Message sent to {target_user}@{target_server_name}"
-
-
-def main():
-    print("Mail System Simulator")
-    print("Available commands:")
-    print("1. create_server <name>")
-    print("2. create_user <server> <username>")
-    print("3. send <from_user> <from_server> <to_user> <to_server> <message>")
-    print("4. receive <user> <server>")
-    print("5. list_servers")
-    print("6. exit")
-
-    while True:
-        try:
-            cmd = input("\n> ").strip().split()
-            if not cmd:
-                continue
-
-            if cmd[0] == "create_server":
-                MailServer(cmd[1])
-                print(f"Server {cmd[1]} created")
-
-            elif cmd[0] == "create_user":
-                server = MailServer.get_server(cmd[1])
-                if server:
-                    MailClient(server, cmd[2])
-                    print(f"User {cmd[2]} added to {cmd[1]}")
-                else:
-                    print("Server not found")
-
-            elif cmd[0] == "send":
-                server = MailServer.get_server(cmd[2])
-                if server:
-                    client = MailClient(server, cmd[1])
-                    print(client.send_mail(cmd[4], cmd[3], ' '.join(cmd[5:])))
-                else:
-                    print("Source server not found")
-
-            elif cmd[0] == "receive":
-                server = MailServer.get_server(cmd[2])
-                if server:
-                    client = MailClient(server, cmd[1])
-                    messages = client.receive_mail()
-                    print("Received messages:" if isinstance(messages, list) else messages)
-                    if isinstance(messages, list):
-                        for msg in messages:
-                            print(f"- {msg}")
-                else:
-                    print("Server not found")
-
-            elif cmd[0] == "list_servers":
-                servers = MailServer.list_servers()
-                print("Available servers:", ', '.join(servers) if servers else "None")
-
-            elif cmd[0] == "exit":
-                break
-
-            else:
-                print("Unknown command")
-
-        except Exception as e:
-            print(f"Error: {e}")
-
-
-if __name__ == "__main__":
-    main()
-
-
 # Задание 15
-def make_negative(x):
-    return -x if x > 0 else x
-
-
-def square(x):
-    return x ** 2
-
-
-def strange_command(x):
-    return x + 1 if x % 5 == 0 else x
-
-
 commands = {
-    'make_negative': (lambda x: x > 0, make_negative),
-    'square': (lambda x: True, square),
-    'strange_command': (lambda x: x % 5 == 0, strange_command)
+    'make_negative': (lambda x: x > 0, lambda x: -x),
+    'square': (lambda _: True, lambda x: x ** 2),
+    'strange_command': (lambda x: x % 5 == 0, lambda x: x + 1)
 }
 
 numbers = list(map(int, input().split()))
-command = input().strip()
-
-while command in commands:
-    condition, transform = commands[command]
+while (cmd := input().strip()) in commands:
+    condition, transform = commands[cmd]
     numbers = [transform(x) if condition(x) else x for x in numbers]
     print(' '.join(map(str, numbers)))
-    command = input().strip()
-# Задание 16
-import math
 
-# Сначала объявляем класс Function
+    # Задание 16
+    import math
+
+
 class Function:
+    ops = {
+        '+': lambda a, b: a + b,
+        '-': lambda a, b: a - b,
+        '*': lambda a, b: a * b,
+        '/': lambda a, b: a / b
+    }
+
     def __init__(self, name, left, op, right):
-        self.name = name
-        self.left = left
-        self.op = op
-        self.right = right
+        self.name, self.left, self.op, self.right = name, left, op, right
 
     def evaluate(self, x):
-        left_val = self.left.evaluate(x) if isinstance(self.left, Function) else float(self.left)
-        right_val = self.right.evaluate(x) if isinstance(self.right, Function) else float(self.right)
+        left = self.left if isinstance(self.left, (int, float)) else self.left.evaluate(x)
+        right = self.right if isinstance(self.right, (int, float)) else self.right.evaluate(x)
+        return self.ops[self.op](left, right)
 
-        if self.op == '+':
-            return left_val + right_val
-        elif self.op == '-':
-            return left_val - right_val
-        elif self.op == '*':
-            return left_val * right_val
-        elif self.op == '/':
-            return left_val / right_val
-        else:
-            raise ValueError(f"Unknown operator: {self.op}")
 
-# Затем определяем предопределённые функции
-x_function = Function('x', '0', '+', '0')
-sqrt_fun = Function('sqrt_fun', '0', '+', '0')
+x_func = Function('x', 0, '+', 0)
+sqrt_func = Function('sqrt_fun', 0, '+', 0)
 
-# Переопределяем evaluate для них
-def x_evaluate(self, x):
-    return x
+x_func.evaluate = lambda self, x: x
+sqrt_func.evaluate = lambda self, x: math.sqrt(x)
 
-def sqrt_evaluate(self, x):
-    return math.sqrt(x)
+functions = {'x': x_func, 'sqrt_fun': sqrt_func}
 
-x_function.evaluate = x_evaluate.__get__(x_function, Function)
-sqrt_fun.evaluate = sqrt_evaluate.__get__(sqrt_fun, Function)
-
-# Создаём словарь функций
-functions = {
-    'x': x_function,
-    'sqrt_fun': sqrt_fun
-}
-
-# Теперь читаем `n` и обрабатываем ввод
-n = int(input())  # Теперь `n` определена перед использованием
+n = int(input())
 for _ in range(n):
     parts = input().split()
     if not parts:
         continue
 
     if parts[0] == 'define':
-        if len(parts) < 5:
-            print("Error: 'define' requires 4 arguments (name, left, op, right)")
+        name, left, op, right = parts[1], parts[2], parts[3], parts[4]
+        left_obj = float(left) if left.replace('.', '').isdigit() else functions.get(left)
+        right_obj = float(right) if right.replace('.', '').isdigit() else functions.get(right)
+
+        if None in (left_obj, right_obj):
+            print("Unknown function in definition")
             continue
-
-        name = parts[1]
-        left = parts[2]
-        op = parts[3]
-        right = parts[4]
-
-        # Проверяем left
-        left_obj = None
-        try:
-            left_obj = float(left)
-        except ValueError:
-            if left in functions:
-                left_obj = functions[left]
-            else:
-                print(f"Unknown function: {left}")
-                continue
-
-        # Проверяем right
-        right_obj = None
-        try:
-            right_obj = float(right)
-        except ValueError:
-            if right in functions:
-                right_obj = functions[right]
-            else:
-                print(f"Unknown function: {right}")
-                continue
 
         functions[name] = Function(name, left_obj, op, right_obj)
 
-    elif parts[0] == "calculate":
-        if len(parts) < 2:
-            print("Insufficient arguments for 'calculate'")
+    elif parts[0] == 'calculate':
+        func = functions.get(parts[1])
+        if not func:
+            print("Unknown function")
             continue
 
-        func_name = parts[1]
-        try:
-            points = list(map(float, parts[2:]))
-        except ValueError:
-            print("Error: all arguments after function name must be numbers")
-            continue
-
-        if func_name not in functions:
-            print(f"Unknown function: {func_name}")
-            continue
-
-        results = []
-        for point in points:
-            try:
-                result = functions[func_name].evaluate(point)
-                results.append(str(result))
-            except Exception as e:
-                results.append("error")
+        points = list(map(float, parts[2:]))
+        results = [str(func.evaluate(p)) for p in points]
         print(' '.join(results))
-
-    else:
-        print(f"Unknown command: {parts[0]}")
 
 
 # Задание 17
 class Presentation:
-    def __init__(self, topic, start_time, duration):
-        self.topic = topic
-        self.start_time = start_time
-        self.duration = duration
-        self.end_time = start_time + duration
+    def __init__(self, topic, start, duration):
+        self.topic, self.start, self.duration = topic, start, duration
+        self.end = start + duration
 
     def overlaps(self, other):
-        return not (self.end_time <= other.start_time or other.end_time <= self.start_time)
-
-    def __str__(self):
-        return f"Presentation('{self.topic}', {self.start_time}-{self.end_time})"
+        return not (self.end <= other.start or other.end <= self.start)
 
 
 class Conference:
     def __init__(self):
         self.presentations = []
 
-    def add_presentation(self, presentation):
-        for existing in self.presentations:
-            if existing.overlaps(presentation):
-                print(f"Ошибка: доклад '{presentation.topic}' пересекается с '{existing.topic}'")
-                return False
-        self.presentations.append(presentation)
-        self.presentations.sort(key=lambda p: p.start_time)
-        print(f"Доклад '{presentation.topic}' успешно добавлен")
+    def add_presentation(self, pres):
+        if any(p.overlaps(pres) for p in self.presentations):
+            print(f"Пересечение с другим докладом: {pres.topic}")
+            return False
+        self.presentations.append(pres)
+        self.presentations.sort(key=lambda p: p.start)
         return True
 
     def total_duration(self):
         return sum(p.duration for p in self.presentations)
 
     def max_break(self):
-        if len(self.presentations) < 2:
-            return 0
-        breaks = [self.presentations[i + 1].start_time - self.presentations[i].end_time
+        breaks = [self.presentations[i + 1].start - self.presentations[i].end
                   for i in range(len(self.presentations) - 1)]
         return max(breaks) if breaks else 0
 
     def print_schedule(self):
-        print("Расписание конференции:")
         for i, p in enumerate(self.presentations, 1):
-            print(f"{i}. {p.topic} ({p.start_time}-{p.end_time})")
+            print(f"{i}. {p.topic} ({p.start}-{p.end})")
         print(f"Общая продолжительность: {self.total_duration()}")
-        print(f"Самый длинный перерыв: {self.max_break()}")
-
-
-# Пример использования
-def run_conference_planner():
-    conference = Conference()
-    print("Добро пожаловать в планировщик конференций!")
-    print("Доступные команды: add, schedule, exit")
-
-    while True:
-        command = input("> ").strip().lower()
-        if command == 'exit':
-            break
-        elif command == 'add':
-            topic = input("Введите тему доклада: ")
-            start = float(input("Введите время начала: "))
-            duration = float(input("Введите продолжительность: "))
-            p = Presentation(topic, start, duration)
-            conference.add_presentation(p)
-        elif command == 'schedule':
-            conference.print_schedule()
-        else:
-            print("Неизвестная команда")
-
-
-if __name__ == "__main__":
-    run_conference_planner()
+        print(f"Максимальный перерыв: {self.max_break()}")
 
 
 # Задание 18
 class File:
     def __init__(self, name):
-        self.name = name
-        self.content = ""
+        self.name, self.content = name, ""
 
-    def write(self, content):
-        self.content = content
+    def write(self, text):
+        self.content = text
 
     def read(self):
         return self.content
@@ -736,132 +426,56 @@ class Directory:
     def __init__(self, name):
         self.name = name
         self.files = {}
-        self.subdirectories = {}
+        self.subdirs = {}
 
-    def create_directory(self, path_components):
-        if not path_components:
-            return
+    def get_or_create_subdir(self, name):
+        if name not in self.subdirs:
+            self.subdirs[name] = Directory(name)
+        return self.subdirs[name]
 
-        first = path_components[0]
-        if first not in self.subdirectories:
-            self.subdirectories[first] = Directory(first)
-
-        if len(path_components) > 1:
-            self.subdirectories[first].create_directory(path_components[1:])
-
-    def get_directory(self, path_components):
-        if not path_components:
+    def get_subdir(self, path):
+        if not path:
             return self
-
-        first = path_components[0]
-        if first not in self.subdirectories:
-            return None
-
-        return self.subdirectories[first].get_directory(path_components[1:])
+        current = self
+        for part in path:
+            if part not in current.subdirs:
+                return None
+            current = current.subdirs[part]
+        return current
 
     def list_contents(self):
-        dirs = list(self.subdirectories.keys())
-        files = list(self.files.keys())
-        return dirs + files
-
-    def create_file(self, filename):
-        if filename not in self.files:
-            self.files[filename] = File(filename)
-
-    def get_file(self, filename):
-        return self.files.get(filename)
+        return list(self.subdirs.keys()) + list(self.files.keys())
 
 
 class FileSystem:
     def __init__(self):
         self.root = Directory("")
 
-    def process_path(self, path):
-        if not path:
-            return []
-        return path.split('/')
+    def _resolve_path(self, path):
+        parts = path.split('/') if path else []
+        dir_parts = parts[:-1] if '.' in parts[-1] else parts
+        filename = parts[-1] if '.' in parts[-1] else None
+        return dir_parts, filename
 
     def create_directory(self, path):
-        components = self.process_path(path)
-        self.root.create_directory(components)
+        parts = path.split('/') if path else []
+        current = self.root
+        for part in parts:
+            current = current.get_or_create_subdir(part)
 
     def list_directory(self, path):
-        components = self.process_path(path)
-        dir_obj = self.root.get_directory(components)
-        if dir_obj is None:
-            print(f"Директория {path} не существует")
-            return []
-        return dir_obj.list_contents()
+        dir_parts, _ = self._resolve_path(path)
+        target = self.root.get_subdir(dir_parts)
+        return target.list_contents() if target else []
 
-    def write_file(self, filepath, content):
-        components = self.process_path(filepath)
-        if not components:
-            print("Недопустимое имя файла")
-            return
+    def write_file(self, path, content):
+        dir_parts, filename = self._resolve_path(path)
+        target = self.root.get_subdir(dir_parts)
+        if target and filename:
+            target.files[filename] = File(filename)
+            target.files[filename].write(content)
 
-        filename = components[-1]
-        dir_components = components[:-1]
-
-        dir_obj = self.root.get_directory(dir_components)
-        if dir_obj is None:
-            print(f"Директория {'/'.join(dir_components)} не существует")
-            return
-
-        dir_obj.create_file(filename)
-        dir_obj.get_file(filename).write(content)
-
-    def read_file(self, filepath):
-        components = self.process_path(filepath)
-        if not components:
-            print("Недопустимое имя файла")
-            return ""
-
-        filename = components[-1]
-        dir_components = components[:-1]
-
-        dir_obj = self.root.get_directory(dir_components)
-        if dir_obj is None:
-            print(f"Директория {'/'.join(dir_components)} не существует")
-            return ""
-
-        file_obj = dir_obj.get_file(filename)
-        if file_obj is None:
-            print(f"Файл {filepath} не существует")
-            return ""
-
-        return file_obj.read()
-
-
-# Пример использования
-def run_file_system():
-    fs = FileSystem()
-    print("Добро пожаловать в файловую систему!")
-    print("Доступные команды: mkdir, ls, write, read, exit")
-
-    while True:
-        command = input("> ").strip().lower()
-        if command == 'exit':
-            break
-        elif command == 'mkdir':
-            path = input("Введите путь директории: ")
-            fs.create_directory(path)
-            print(f"Директория {path} создана")
-        elif command == 'ls':
-            path = input("Введите путь директории: ")
-            contents = fs.list_directory(path)
-            print("Содержимое:", ' '.join(contents))
-        elif command == 'write':
-            path = input("Введите путь файла: ")
-            content = input("Введите содержимое: ")
-            fs.write_file(path, content)
-            print(f"Файл {path} записан")
-        elif command == 'read':
-            path = input("Введите путь файла: ")
-            content = fs.read_file(path)
-            print(f"Содержимое файла {path}: {content}")
-        else:
-            print("Неизвестная команда")
-
-
-if __name__ == "__main__":
-    run_file_system()
+    def read_file(self, path):
+        dir_parts, filename = self._resolve_path(path)
+        target = self.root.get_subdir(dir_parts)
+        return target.files[filename].read() if target and filename in target.files else ""
